@@ -875,7 +875,7 @@ decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
             [self.delegate playerView:self didChangeToQuality:quality];
         }
     } else if ([action isEqual:kYTPlayerCallbackOnPictureInPictureChange]) {
-        if ([self.delegate respondsToSelector:@selector(playerView:didChangeToQuality:)]) {
+        if ([self.delegate respondsToSelector:@selector(playerView:didChangeToStatePictureInPicture:)]) {
             [self.delegate playerView:self didChangeToStatePictureInPicture: data];
         }
     } else if ([action isEqual:kYTPlayerCallbackOnError]) {
