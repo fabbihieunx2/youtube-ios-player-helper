@@ -83,23 +83,23 @@ NSString static *const kYTPlayerSyndicationRegexPattern = @"^https://tpc.googles
 
 @implementation YTPlayerView
 
-- (BOOL)loadWithVideoId:(NSString *)videoId {
-    return [self loadWithVideoId:videoId playerVars:nil];
+- (BOOL)loadWithVideoId:(NSString *)videoId isEnablePIP:(BOOL)pipEnabled {
+    return [self loadWithVideoId:videoId playerVars:nil isEnablePIP: false];
 }
 
-- (BOOL)loadWithPlaylistId:(NSString *)playlistId {
-    return [self loadWithPlaylistId:playlistId playerVars:nil];
+- (BOOL)loadWithPlaylistId:(NSString *)playlistId isEnablePIP:(BOOL)pipEnabled {
+    return [self loadWithPlaylistId:playlistId playerVars:nil isEnablePIP: pipEnabled];
 }
 
-- (BOOL)loadWithVideoId:(NSString *)videoId playerVars:(NSDictionary *)playerVars {
+- (BOOL)loadWithVideoId:(NSString *)videoId playerVars:(NSDictionary *)playerVars isEnablePIP:(BOOL)pipEnabled {
     if (!playerVars) {
         playerVars = @{};
     }
     NSDictionary *playerParams = @{ @"videoId" : videoId, @"playerVars" : playerVars };
-    return [self loadWithPlayerParams:playerParams];
+    return [self loadWithPlayerParams:playerParams isEnablePIP:pipEnabled];
 }
 
-- (BOOL)loadWithPlaylistId:(NSString *)playlistId playerVars:(NSDictionary *)playerVars {
+- (BOOL)loadWithPlaylistId:(NSString *)playlistId playerVars:(NSDictionary *)playerVars isEnablePIP:(BOOL)pipEnabled {
     
     // Mutable copy because we may have been passed an immutable config dictionary.
     NSMutableDictionary *tempPlayerVars = [[NSMutableDictionary alloc] init];
@@ -110,7 +110,7 @@ NSString static *const kYTPlayerSyndicationRegexPattern = @"^https://tpc.googles
     }
     
     NSDictionary *playerParams = @{ @"playerVars" : tempPlayerVars };
-    return [self loadWithPlayerParams:playerParams];
+    return [self loadWithPlayerParams:playerParams isEnablePIP:pipEnabled];
 }
 
 #pragma mark - Player methods
@@ -988,7 +988,7 @@ decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
  *                               whether a single video or playlist is being loaded.
  * @return YES if successful, NO if not.
  */
-- (BOOL)loadWithPlayerParams:(NSDictionary *)additionalPlayerParams {
+- (BOOL)loadWithPlayerParams:(NSDictionary *)additionalPlayerParams isEnablePIP:( BOOL)pipEnabled {
     NSDictionary *playerCallbacks = @{
         @"onReady" : @"onReady",
         @"onStateChange" : @"onStateChange",
@@ -1021,7 +1021,7 @@ decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
     
     // Remove the existing webview to reset any state
     [self.webView removeFromSuperview];
-    _webView = [self createNewWebView];
+    _webView = [self createNewWebView:pipEnabled];
     [self addSubview:self.webView];
     
     NSError *error = nil;
@@ -1212,11 +1212,11 @@ decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
     _webView = webView;
 }
 
-- (ModifySafeAreaWKWebView *)createNewWebView {
+- (ModifySafeAreaWKWebView *)createNewWebView: (BOOL)pipEnable {
     WKWebViewConfiguration *webViewConfiguration = [[WKWebViewConfiguration alloc] init];
     webViewConfiguration.allowsInlineMediaPlayback = YES;
     webViewConfiguration.mediaTypesRequiringUserActionForPlayback = WKAudiovisualMediaTypeNone;
-    webViewConfiguration.allowsPictureInPictureMediaPlayback = YES;
+    webViewConfiguration.allowsPictureInPictureMediaPlayback = pipEnable;
     ModifySafeAreaWKWebView *webView = [[ModifySafeAreaWKWebView alloc] initWithFrame:self.bounds
                                                                         configuration:webViewConfiguration];
     webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);

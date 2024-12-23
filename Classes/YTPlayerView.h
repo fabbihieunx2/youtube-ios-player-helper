@@ -180,7 +180,7 @@ typedef void (^YTPlaybackQualityCompletionHandler)(YTPlaybackQuality result,
  * @param videoId The YouTube video ID of the video to load in the player view.
  * @return YES if player has been configured correctly, NO otherwise.
  */
-- (BOOL)loadWithVideoId:(nonnull NSString *)videoId;
+- (BOOL)loadWithVideoId:(nonnull NSString *)videoId isEnablePIP:(BOOL)pipEnabled ;
 
 /**
  * This method loads the player with the given playlist ID.
@@ -195,7 +195,7 @@ typedef void (^YTPlaybackQualityCompletionHandler)(YTPlaybackQuality result,
  * @param playlistId The YouTube playlist ID of the playlist to load in the player view.
  * @return YES if player has been configured correctly, NO otherwise.
  */
-- (BOOL)loadWithPlaylistId:(nonnull NSString *)playlistId;
+- (BOOL)loadWithPlaylistId:(nonnull NSString *)playlistId isEnablePIP:(BOOL)pipEnabled ;
 
 /**
  * This method loads the player with the given video ID and player variables. Player variables
@@ -218,7 +218,7 @@ typedef void (^YTPlaybackQualityCompletionHandler)(YTPlaybackQuality result,
  * @param playerVars An NSDictionary of player parameters.
  * @return YES if player has been configured correctly, NO otherwise.
  */
-- (BOOL)loadWithVideoId:(nonnull NSString *)videoId playerVars:(nullable NSDictionary *)playerVars;
+- (BOOL)loadWithVideoId:(nonnull NSString *)videoId playerVars:(nullable NSDictionary *)playerVars isEnablePIP:( BOOL)pipEnabled;
 
 /**
  * This method loads the player with the given playlist ID and player variables. Player variables
@@ -243,7 +243,8 @@ typedef void (^YTPlaybackQualityCompletionHandler)(YTPlaybackQuality result,
  * @return YES if player has been configured correctly, NO otherwise.
  */
 - (BOOL)loadWithPlaylistId:(nonnull NSString *)playlistId
-                playerVars:(nullable NSDictionary *)playerVars;
+                playerVars:(nullable NSDictionary *)playerVars
+               isEnablePIP:(BOOL)pipEnabled;
 
 /**
  * This method loads an iframe player with the given player parameters. Usually you may want to use
@@ -256,7 +257,7 @@ typedef void (^YTPlaybackQualityCompletionHandler)(YTPlaybackQuality result,
  *                               whether a single video or playlist is being loaded.
  * @return YES if successful, NO if not.
  */
-- (BOOL)loadWithPlayerParams:(nullable NSDictionary *)additionalPlayerParams;
+- (BOOL)loadWithPlayerParams:(nullable NSDictionary *)additionalPlayerParams isEnablePIP:( BOOL)pipEnabled;
 
 #pragma mark - Player controls
 
